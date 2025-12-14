@@ -42,6 +42,25 @@ class Wall:
         self.top_right_corner = (self.right_boundary, self.top_boundary)
         self.top_left_corner = (self.left_boundary, self.top_boundary)
 
+class Hole(Wall):
+    def __init__(self, xy, r):
+        """
+        Data class for Hole generation.
+        The described hole will be approximated to a bounding wall
+        around the hole.
+        
+        :param xy: Centre of the hole (x, y)
+        :param r: radius if the hole
+        """
+        self.centre = xy
+        self.radius = r
+
+        # approximate the hole to a bounding wall
+        base_point = (self.centre[0] - r, self.centre[1] - r)
+        width = r
+        height = r
+        super().__init__(base_point, width, height)
+
 class Labyrinth:
     def __init__(self):
         self.walls = []
@@ -49,3 +68,17 @@ class Labyrinth:
 
     def add_wall(self, xy, width, height):
         self.walls.append(Wall(xy, width, height))
+
+    def add_hole(self, xy, r):
+        self.holes.append(Hole(xy, r))
+
+
+
+
+if __name__ == "__main__":
+    lb = Labyrinth()
+    lb.add_wall((0, 0), 2, 2)
+    lb.add_hole((4, 4), 1)
+    lb.add_hole((5, 5), 1)
+    print(lb.walls)
+    print(lb.holes[0].base_point)
