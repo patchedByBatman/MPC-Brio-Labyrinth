@@ -106,6 +106,7 @@ class Labyrinth:
         self.add_hole((2.5, 0), 1)
         self.add_wall((7.5, 6.5), 1, -15.5)
         self.add_wall((7.5, 6.5), 1, -15.5)
+        self.add_wall((7.5, 6.5), 1, -15.5)
 
 
 
