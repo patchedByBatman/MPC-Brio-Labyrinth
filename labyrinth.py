@@ -18,7 +18,7 @@ class Wall:
         :param width: width of the wall
         :param height: height of the wall
         """
-        self.base_point = xy
+        self.base_point = list(xy)
         self.width = width
         self.height = height
         if width < 0:
@@ -37,12 +37,14 @@ class Wall:
 
         self.wall_centre = (self.base_point[0] + self.width/2, 
                             self.base_point[1] + self.height/2)
-        self.bottom_left_corner = self.base_point
+        self.bottom_left_corner = tuple(self.base_point)
         self.bottom_right_corner = (self.right_boundary, self.bottom_boundary)
         self.top_right_corner = (self.right_boundary, self.top_boundary)
         self.top_left_corner = (self.left_boundary, self.top_boundary)
 
 class Hole(Wall):
+    # Here we have the programmer's version of a spherical cow.
+    # Behold the Square-ical HOL-E-cow.
     def __init__(self, xy, r):
         """
         Data class for Hole generation.
@@ -57,8 +59,8 @@ class Hole(Wall):
 
         # approximate the hole to a bounding wall
         base_point = (self.centre[0] - r, self.centre[1] - r)
-        width = r
-        height = r
+        width = 2*r
+        height = 2*r
         super().__init__(base_point, width, height)
 
 class Labyrinth:
@@ -73,6 +75,10 @@ class Labyrinth:
         self.holes.append(Hole(xy, r))
 
     def build_labyrinth(self):
+        self.add_wall((-11, 11), 22, 1)
+        self.add_wall((-11, -11), -1, 22)
+        self.add_wall((-11, -11), 22, -1)
+        self.add_wall((11, 11), 22, -1)
         self.add_wall((10, 7.5), 1, 3.5)
         self.add_wall((2, 6.5), 9, 1)
         self.add_wall((2, 6.5), 1, -3)
