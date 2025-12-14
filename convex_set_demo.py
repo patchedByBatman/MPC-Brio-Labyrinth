@@ -50,6 +50,5 @@ from matplotlib.animation import FuncAnimation
 animation = FuncAnimation(fig=an.fig, func=update_animation, frames=range(len(ball_patches)), interval=500)
 an.build_labyrinth()
 animation.save('manual_ball_positioning_feasible_convex_sets.mp4', writer='ffmpeg', fps=30, bitrate=1800, dpi=400)
-from matplotlib import pyplot as plt
-plt.show()
+an.show_animation()
 # an.fig.show()
