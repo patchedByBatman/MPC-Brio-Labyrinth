@@ -91,6 +91,21 @@ class Labyrinth:
         self.add_wall((-1.5, 3), 1, 2)
         self.add_hole((-6, 4), 1)
         self.add_wall((-8, 3.5), 1, 1)
+        self.add_wall((-11, 0), 2, 1)
+        self.add_wall((-5, 3), 1, -6)
+        self.add_wall((-5, -3), -3, 1)
+        self.add_wall((-8, -5.5), 1, -2)
+        self.add_wall((-5, -5.5), 1, -2)
+        self.add_hole((-10, -6.5), 1)
+        self.add_wall((-2, -5.5), 1, -3)
+        self.add_wall((1, -5.5), 1, -3)
+        self.add_hole((-3, -4), 1)
+        self.add_hole((0, -7), 1)
+        self.add_wall((5, 0), -1, -11.5)
+        self.add_wall((0, 0.5), 1, -1.5)
+        self.add_hole((2.5, 0), 1)
+        self.add_wall((7.5, 6.5), 1, -15.5)
+        self.add_wall((7.5, 6.5), 1, -15.5)
 
 
 
