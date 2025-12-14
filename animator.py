@@ -13,7 +13,7 @@ class Animator(Labyrinth):
         self.walls = []
         self.holes = []
 
-        self.pos_ax = self.fig.add_subplot(self.grid[0:6, 0:6])
+        self.pos_ax = self.fig.add_subplot(self.grid[0:-1, 0:-1])
         self.pos_ax.plot([], [])
         self.pos_ax.set_aspect('equal')
         self.pos_ax.grid()
@@ -79,6 +79,8 @@ class Animator(Labyrinth):
             self.pos_ax.add_patch(wall)
         for hole in self.holes:
             self.pos_ax.add_patch(hole)
+    
+    def show_animation(self):
         plt.show()
 
 
