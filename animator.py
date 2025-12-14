@@ -1,8 +1,12 @@
+from labyrinth import Labyrinth
+
 from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle, Circle
 
-class Animator:
+
+class Animator(Labyrinth):
     def __init__(self, animation_name="bRiO Labyrinth"):
+        super().__init__()
         self.animation_name = animation_name
         self.fig = plt.figure(num=animation_name, figsize=(16, 9), layout="constrained")
         self.grid = self.fig.add_gridspec(9, 16)
@@ -70,18 +74,7 @@ class Animator:
         self.walls.append(Circle(xy, radius, fc="black"))
 
     def build_labyrinth(self):
-        self.add_wall((10, 7.5), 1, 3.5)
-        self.add_wall((2, 6.5), 9, 1)
-        self.add_wall((2, 6.5), 1, -3)
-        self.add_wall((-1.5, 9), 1, 2)
-        self.add_wall((-5, 5), 1, 2)
-        self.add_wall((-11, 6.5), 2, 1)
-        self.add_hole((-10, 8.5), 1)
-        self.add_hole((-3, 4), 1)
-        self.add_hole((1, 4), 1)
-        self.add_wall((-1.5, 3), 1, 2)
-        self.add_hole((-6, 4), 1)
-        self.add_wall((-8, 3.5), 1, 1)
+        super().build_labyrinth()
         for wall in self.walls:
             self.pos_ax.add_patch(wall)
         for hole in self.holes:
