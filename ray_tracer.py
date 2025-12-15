@@ -88,10 +88,13 @@ class RayTracer:
                                     right_boundary, and top_boundary 
                                     properties)
         """
-        closest_intersections = []
-        for object in objects:
+        left = []
+        bottom = []
+        right = []
+        top = []
+        for ray in self.rays:
             valid_intersections = []
-            for ray in self.rays:
+            for object in objects:
                 x1 = object.left_boundary
                 y1 = ray.compute_y(x1)
 
@@ -120,13 +123,52 @@ class RayTracer:
                     # print(True)
                 if dmin != np.inf:
                     valid_intersections.append([dmin, points[imin]])
-            valid_intersections.sort(key=lambda intersection: intersection[0])
-            if valid_intersections != []:
-                closest_intersections.append(valid_intersections[0])
-                # closest_intersections += valid_intersections
+            # valid_intersections.sort(key=lambda intersection: intersection[0])
+            intersections_to_left = []
+            intersections_to_bottom = []
+            intersections_to_right = []
+            intersections_to_top = []
+            for intersection in valid_intersections:
+                if np.tan(-np.pi/12) <= ray.slope <= np.tan(np.pi/12):
+                    if intersection[1][0] < ray.starting_point[0]:
+                        intersections_to_left.append(intersection)
+                    else:
+                        intersections_to_right.append(intersection)
+                elif np.tan(np.pi/2 + np.pi/12) <= ray.slope <= np.tan(np.pi/2 - np.pi/12):
+                    if intersection[1][1] < ray.starting_point[1]:
+                        intersections_to_bottom.append(intersection)
+                    else:
+                        intersections_to_top.append(intersection)
 
-        closest_intersections.sort(key=lambda intersection: intersection[0])
-        return closest_intersections
+            intersections_to_left.sort(key=lambda intersection: intersection[0])
+            intersections_to_bottom.sort(key=lambda intersection: intersection[0])
+            intersections_to_right.sort(key=lambda intersection: intersection[0])
+            intersections_to_top.sort(key=lambda intersection: intersection[0])
+            if intersections_to_left != []:
+                left.append(intersections_to_left[0])
+            if intersections_to_bottom != []:
+                bottom.append(intersections_to_bottom[0])
+            if intersections_to_right != []:
+                right.append(intersections_to_right[0])
+            if intersections_to_top != []:
+                top.append(intersections_to_top[0])
+            
+                # closest_intersections += valid_intersections
+        left.sort(key=lambda intersection: intersection[0])
+        bottom.sort(key=lambda intersection: intersection[0])
+        right.sort(key=lambda intersection: intersection[0])
+        top.sort(key=lambda intersection: intersection[0])
+        # closest_intersections.sort(key=lambda intersection: intersection[0])
+        if len(left) == 0:
+            left = [[-1, (-10, 0)]]
+        if len(bottom) == 0:
+            bottom = [[-1, (0, -10)]]
+        if len(right) == 0:
+            right = [[-1, (10, 0)]]
+        if len(top) == 0:
+            top = [[-1, (0, 10)]]
+            
+        return left[0], bottom[0], right[0], top[0]
     
 
 class ConvexSetConstructor:
