@@ -159,16 +159,17 @@ class RayTracer:
         right.sort(key=lambda intersection: intersection[0])
         top.sort(key=lambda intersection: intersection[0])
         # closest_intersections.sort(key=lambda intersection: intersection[0])
-        if len(left) == 0:
-            left = [[-1, (-10, 0)]]
-        if len(bottom) == 0:
-            bottom = [[-1, (0, -10)]]
-        if len(right) == 0:
-            right = [[-1, (10, 0)]]
-        if len(top) == 0:
-            top = [[-1, (0, 10)]]
+        # if len(left) == 0:
+        #     left = [[-1, (self.starting_point[0] - 1, 0)]]
+        # if len(bottom) == 0:
+        #     bottom = [[-1, (0, self.starting_point[1] - 1)]]
+        # if len(right) == 0:
+        #     right = [[-1, (self.starting_point[0] + 1, 0)]]
+        # if len(top) == 0:
+        #     top = [[-1, (0, self.starting_point[1] + 1)]]
             
-        return left[0], bottom[0], right[0], top[0]
+        # return left[0], bottom[0], right[0], top[0]
+        return left + bottom + right + top
     
 
 class ConvexSetConstructor:
@@ -181,19 +182,20 @@ class ConvexSetConstructor:
 
         polytopes_A= []
         polytopes_b= []
-        for intersection in closest_intersections:
-            x1 = intersection[1][0]
-            y1 = intersection[1][1]
-            a = x1 - x
-            b = y1 - y
-            c = x1*(x1 - x) + y1*(y1 - y)
-            c_xy = a*x + b*y
-            if c_xy >= c:
-                polytopes_A.append([-a, -b])
-                polytopes_b.append([-c])
-            else:
-                polytopes_A.append([a, b])
-                polytopes_b.append([c])
+        left, bottom, right, top = closest_intersections
+        
+        polytopes_A.append([-1, 0])
+        polytopes_b.append([-left[0]])
+
+        polytopes_A.append([0, -1])
+        polytopes_b.append([-bottom[0]])
+
+        polytopes_A.append([1, 0])
+        polytopes_b.append([right[0]])
+
+        polytopes_A.append([0, 1])
+        polytopes_b.append([top[0]])
+            
 
 
         polytopes_A = np.asarray(polytopes_A, dtype=float)
