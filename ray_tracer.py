@@ -145,19 +145,45 @@ class RayTracer:
             intersections_to_right.sort(key=lambda intersection: intersection[0])
             intersections_to_top.sort(key=lambda intersection: intersection[0])
             if intersections_to_left != []:
-                left.append(intersections_to_left[0])
+                left.append(intersections_to_left[0] + [ray.slope])
             if intersections_to_bottom != []:
-                bottom.append(intersections_to_bottom[0])
+                bottom.append(intersections_to_bottom[0] + [ray.slope])
             if intersections_to_right != []:
-                right.append(intersections_to_right[0])
+                right.append(intersections_to_right[0] + [ray.slope])
             if intersections_to_top != []:
-                top.append(intersections_to_top[0])
+                top.append(intersections_to_top[0] + [ray.slope])
             
                 # closest_intersections += valid_intersections
         left.sort(key=lambda intersection: intersection[0])
         bottom.sort(key=lambda intersection: intersection[0])
         right.sort(key=lambda intersection: intersection[0])
         top.sort(key=lambda intersection: intersection[0])
+
+        points = left + bottom + right + top
+
+        points.sort(key=lambda point : np.abs(point[-1])*point[0]**2*np.abs(ray.starting_point[1] - point[1][1]))
+        for point in points:
+            if point[1][0] < self.starting_point[0]:
+                left = [point]
+                break
+        for point in points:
+            if self.starting_point[0] < point[1][0]:
+                right = [point]
+                break
+        # print(left)
+
+        points.sort(key=lambda point : np.abs(point[-1])/point[0]**2*np.abs(ray.starting_point[0] - point[1][0]))
+        for point in points[::-1]:
+            if point[1][1] < self.starting_point[1]:
+                bottom = [point]
+                break
+
+        for point in points[::-1]:
+            if self.starting_point[1] < point[1][1]:
+                top = [point]
+                break
+        
+        # print(left)
         # closest_intersections.sort(key=lambda intersection: intersection[0])
         # if len(left) == 0:
         #     left = [[-1, (self.starting_point[0] - 1, 0)]]
@@ -185,18 +211,16 @@ class ConvexSetConstructor:
         left, bottom, right, top = closest_intersections
         
         polytopes_A.append([-1, 0])
-        polytopes_b.append([-left[0]])
+        polytopes_b.append([-left[1][0]])
 
         polytopes_A.append([0, -1])
-        polytopes_b.append([-bottom[0]])
+        polytopes_b.append([-bottom[1][1]])
 
         polytopes_A.append([1, 0])
-        polytopes_b.append([right[0]])
+        polytopes_b.append([right[1][0]])
 
         polytopes_A.append([0, 1])
-        polytopes_b.append([top[0]])
-            
-
+        polytopes_b.append([top[1][1]])
 
         polytopes_A = np.asarray(polytopes_A, dtype=float)
         polytopes_b = np.asarray(polytopes_b, dtype=float)
