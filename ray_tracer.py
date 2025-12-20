@@ -161,7 +161,8 @@ class RayTracer:
 
         points = left + bottom + right + top
 
-        points.sort(key=lambda point : np.abs(point[-1])*point[0]**2*np.abs(ray.starting_point[1] - point[1][1]))
+        points.sort(key=lambda point : point[0])
+        return points
         for point in points:
             if point[1][0] < self.starting_point[0]:
                 left = [point]
@@ -202,7 +203,7 @@ class ConvexSetConstructor:
     def __init__(self):
         pass
 
-    def get_convex_set(self, rays_starting_point, closest_intersections):
+    def get_convex_set_old(self, rays_starting_point, closest_intersections):
         x = rays_starting_point[0]
         y = rays_starting_point[1]
 
@@ -227,8 +228,127 @@ class ConvexSetConstructor:
 
         poly = polytope.Polytope(polytopes_A, polytopes_b)
         return poly
-               
+    
+    def get_convex_set(self, rays_starting_point, closest_intersections):
+        x = rays_starting_point[0]
+        y = rays_starting_point[1]
 
+        polytopes_A= []
+        polytopes_b= []
+        closest_point = closest_intersections[0]
+        xc = closest_point[1][0]
+        yc = closest_point[1][1]
+        intersections = closest_intersections[1:]
+        for intersection in closest_intersections:
+            print(intersection)
+
+        for i, intersection in enumerate(intersections[::-1]):
+            x = intersection[1][0]
+            y = intersection[1][1]
+            print(xc, yc, x, y)
+            if xc <= x:
+                if yc <= y:
+                    polytopes_A.append([-1, 0])
+                    polytopes_b.append([-xc-0.01])
+
+                    polytopes_A.append([0, -1])
+                    polytopes_b.append([-yc-0.01])
+
+                    polytopes_A.append([1, 0])
+                    polytopes_b.append([x-0.01])
+
+                    polytopes_A.append([0, 1])
+                    polytopes_b.append([y-0.01])
+                else:
+                    polytopes_A.append([-1, 0])
+                    polytopes_b.append([-xc-0.01])
+
+                    polytopes_A.append([0, 1])
+                    polytopes_b.append([yc-0.01])
+
+                    polytopes_A.append([1, 0])
+                    polytopes_b.append([x-0.01])
+
+                    polytopes_A.append([0, -1])
+                    polytopes_b.append([-y-0.01])
+            else:
+                if yc <= y:
+                    polytopes_A.append([1, 0])
+                    polytopes_b.append([xc-0.01])
+
+                    polytopes_A.append([0, -1])
+                    polytopes_b.append([-yc-0.01])
+
+                    polytopes_A.append([-1, 0])
+                    polytopes_b.append([-x-0.01])
+
+                    polytopes_A.append([0, 1])
+                    polytopes_b.append([y-0.01])
+                else:
+                    polytopes_A.append([1, 0])
+                    polytopes_b.append([xc-0.01])
+
+                    polytopes_A.append([0, 1])
+                    polytopes_b.append([yc-0.01])
+
+                    polytopes_A.append([-1, 0])
+                    polytopes_b.append([-x-0.01])
+
+                    polytopes_A.append([0, -1])
+                    polytopes_b.append([-y-0.01])
+                    
+            
+            polytopes_A = np.asarray(polytopes_A, dtype=float)
+            polytopes_b = np.asarray(polytopes_b, dtype=float)
+            poly = polytope.Polytope(polytopes_A, polytopes_b)
+            is_in = False
+            for j, intersection in enumerate(intersections[::-1]):
+                if j == i:
+                    continue
+                if intersection[1] in poly:
+                    is_in = True
+                    polytopes_A = []
+                    polytopes_b = []
+                    break
+
+            if not is_in:
+                return poly
+
+
+
+
+                      
+
+        
+        # polytopes_A.append([-1, 0])
+        # polytopes_b.append([-left[1][0]])
+
+        # polytopes_A.append([0, -1])
+        # polytopes_b.append([-bottom[1][1]])
+
+        # polytopes_A.append([1, 0])
+        # polytopes_b.append([right[1][0]])
+
+        # polytopes_A.append([0, 1])
+        # polytopes_b.append([top[1][1]])
+
+        # polytopes_A = np.asarray(polytopes_A, dtype=float)
+        # polytopes_b = np.asarray(polytopes_b, dtype=float)
+
+        # poly = polytope.Polytope(polytopes_A, polytopes_b)
+        # return poly
+               
+if __name__ == "__main__":
+    intersections = [[1, (-5,5), 2], [2, (1, 1), 3]]
+    csc = ConvexSetConstructor()
+    poly = csc.get_convex_set((0, 0), intersections)
+    from polytope_helper import get_patch
+    poly_patch = get_patch(poly)
+    from matplotlib import pyplot as plt
+    ax = plt.gca()
+    ax.add_patch(poly_patch)
+    polytope.box2poly
+    plt.show()
 
 
 
