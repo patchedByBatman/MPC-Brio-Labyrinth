@@ -168,7 +168,16 @@ class ConvexSetConstructor:
     def __init__(self):
         pass
     
-    def get_convex_set(self, rays_starting_point, closest_intersections):
+    def get_num_path_points_in_poly(self, path, current_idx_on_path, poly):
+        count = 0
+        for point in path[current_idx_on_path:]:
+            if point in poly:
+                count += 1
+
+        return count
+
+
+    def get_convex_set(self, rays_starting_point, closest_intersections, path, current_idx_on_path):
         x = rays_starting_point[0]
         y = rays_starting_point[1]
 
@@ -264,7 +273,7 @@ class ConvexSetConstructor:
                         if not point_in_poly:
                             polys.append(polytope.Polytope(polytopes_A, polytopes_b))
         
-        polys.sort(key=lambda poly: poly.volume)
+        polys.sort(key=lambda poly: self.get_num_path_points_in_poly(path, current_idx_on_path, poly))
         return polys[-1]
                   
                

@@ -19,11 +19,11 @@ poly_patches = []
 ball_patches = []
 ins = []
 scatters = [1]
-for point in path:
+for current_idx_on_path, point in enumerate(path):
     ball_patches.append(Circle(point, 0.5, fc="red"))
     rt.update_rays(point)
     intersections = rt.compute_ray_intersections(lb.walls + lb.holes)
-    poly = csc.get_convex_set(rt.starting_point, intersections)
+    poly = csc.get_convex_set(rt.starting_point, intersections, path, current_idx_on_path)
     ins.append(intersections)
     poly_patch = get_patch(poly, color='lightblue')
     poly_patches.append(poly_patch)
