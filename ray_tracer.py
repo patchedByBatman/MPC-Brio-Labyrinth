@@ -35,7 +35,7 @@ class Ray:
 
 
 class RayTracer:
-    def __init__(self, starting_point=(0, 0), num_rays_per_180degrees=60):
+    def __init__(self, starting_point=(0, 0), num_rays_per_180degrees=30):
         self.starting_point = starting_point
         self.num_rays = num_rays_per_180degrees        
         
@@ -129,12 +129,12 @@ class RayTracer:
             intersections_to_right = []
             intersections_to_top = []
             for intersection in valid_intersections:
-                if np.tan(-np.pi/12) <= ray.slope <= np.tan(np.pi/12):
+                if np.tan(-np.pi/2) <= ray.slope <= np.tan(np.pi/2):
                     if intersection[1][0] < ray.starting_point[0]:
                         intersections_to_left.append(intersection)
                     else:
                         intersections_to_right.append(intersection)
-                elif np.tan(np.pi/2 + np.pi/12) <= ray.slope <= np.tan(np.pi/2 - np.pi/12):
+                elif np.tan(0) <= ray.slope <= np.tan(180):
                     if intersection[1][1] < ray.starting_point[1]:
                         intersections_to_bottom.append(intersection)
                     else:
@@ -161,7 +161,7 @@ class RayTracer:
 
         points = left + bottom + right + top
 
-        points.sort(key=lambda point : point[0])
+        points.sort(key=lambda point : point[2])
         return points
         for point in points:
             if point[1][0] < self.starting_point[0]:
@@ -232,87 +232,111 @@ class ConvexSetConstructor:
     def get_convex_set(self, rays_starting_point, closest_intersections):
         x = rays_starting_point[0]
         y = rays_starting_point[1]
-
+        bottomLeft_ball_boundary = (x - 0.5, y - 0.5)
+        topRight_ball_boundary = (x + 0.5, y + 0.5)
         polytopes_A= []
         polytopes_b= []
-        closest_point = closest_intersections[0]
-        xc = closest_point[1][0]
-        yc = closest_point[1][1]
-        intersections = closest_intersections[1:]
-        for intersection in closest_intersections:
-            print(intersection)
+        polys = []
+        i = 0
+        # for p1, p2 in zip(closest_intersections[::2], closest_intersections[1::2]):
+        for p1 in closest_intersections:
+            for p2 in closest_intersections:
 
-        for i, intersection in enumerate(intersections[::-1]):
-            x = intersection[1][0]
-            y = intersection[1][1]
-            print(xc, yc, x, y)
-            if xc <= x:
-                if yc <= y:
-                    polytopes_A.append([-1, 0])
-                    polytopes_b.append([-xc-0.01])
+                x1 = p1[1][0]
+                y1 = p1[1][1]
+                x2 = p2[1][0]
+                y2 = p2[1][1]
+                # if x1 > x2:
+                #     x1, x2 = x2, x1
+                #     x1 += 0.5
+                #     x2 -= 0.5
 
-                    polytopes_A.append([0, -1])
-                    polytopes_b.append([-yc-0.01])
+                # if y1 > y2:
+                #     y1, y2 = y2, y1
+                #     y1 += 0.5
+                #     y2 -= 0.5
 
-                    polytopes_A.append([1, 0])
-                    polytopes_b.append([x-0.01])
+                if x1 > x2:
+                    x1, x2 = x2, x1
 
-                    polytopes_A.append([0, 1])
-                    polytopes_b.append([y-0.01])
-                else:
-                    polytopes_A.append([-1, 0])
-                    polytopes_b.append([-xc-0.01])
+                if y1 > y2:
+                    y1, y2 = y2, y1
+                # print(x1, y1, x2, y2, p1[2], p2[2])
+                # if xc <= x:
+                #     if yc <= y:
+                #         polytopes_A.append([-1, 0])
+                #         polytopes_b.append([-xc-0.01])
 
-                    polytopes_A.append([0, 1])
-                    polytopes_b.append([yc-0.01])
+                #         polytopes_A.append([0, -1])
+                #         polytopes_b.append([-yc-0.01])
 
-                    polytopes_A.append([1, 0])
-                    polytopes_b.append([x-0.01])
+                #         polytopes_A.append([1, 0])
+                #         polytopes_b.append([x-0.01])
 
-                    polytopes_A.append([0, -1])
-                    polytopes_b.append([-y-0.01])
-            else:
-                if yc <= y:
-                    polytopes_A.append([1, 0])
-                    polytopes_b.append([xc-0.01])
+                #         polytopes_A.append([0, 1])
+                #         polytopes_b.append([y-0.01])
+                #     else:
+                #         polytopes_A.append([-1, 0])
+                #         polytopes_b.append([-xc-0.01])
 
-                    polytopes_A.append([0, -1])
-                    polytopes_b.append([-yc-0.01])
+                #         polytopes_A.append([0, 1])
+                #         polytopes_b.append([yc-0.01])
 
-                    polytopes_A.append([-1, 0])
-                    polytopes_b.append([-x-0.01])
+                #         polytopes_A.append([1, 0])
+                #         polytopes_b.append([x-0.01])
 
-                    polytopes_A.append([0, 1])
-                    polytopes_b.append([y-0.01])
-                else:
-                    polytopes_A.append([1, 0])
-                    polytopes_b.append([xc-0.01])
+                #         polytopes_A.append([0, -1])
+                #         polytopes_b.append([-y-0.01])
+                # else:
+                #     if yc <= y:
+                #         polytopes_A.append([1, 0])
+                #         polytopes_b.append([xc-0.01])
 
-                    polytopes_A.append([0, 1])
-                    polytopes_b.append([yc-0.01])
+                #         polytopes_A.append([0, -1])
+                #         polytopes_b.append([-yc-0.01])
 
-                    polytopes_A.append([-1, 0])
-                    polytopes_b.append([-x-0.01])
+                #         polytopes_A.append([-1, 0])
+                #         polytopes_b.append([-x-0.01])
 
-                    polytopes_A.append([0, -1])
-                    polytopes_b.append([-y-0.01])
-                    
-            
-            polytopes_A = np.asarray(polytopes_A, dtype=float)
-            polytopes_b = np.asarray(polytopes_b, dtype=float)
-            poly = polytope.Polytope(polytopes_A, polytopes_b)
-            is_in = False
-            for j, intersection in enumerate(intersections[::-1]):
-                if j == i:
-                    continue
-                if intersection[1] in poly:
-                    is_in = True
-                    polytopes_A = []
-                    polytopes_b = []
-                    break
+                #         polytopes_A.append([0, 1])
+                #         polytopes_b.append([y-0.01])
+                #     else:
+                #         polytopes_A.append([1, 0])
+                #         polytopes_b.append([xc-0.01])
 
-            if not is_in:
-                return poly
+                #         polytopes_A.append([0, 1])
+                #         polytopes_b.append([yc-0.01])
+
+                #         polytopes_A.append([-1, 0])
+                #         polytopes_b.append([-x-0.01])
+
+                #         polytopes_A.append([0, -1])
+                #         polytopes_b.append([-y-0.01])
+                        
+                
+                # polytopes_A = np.asarray(polytopes_A, dtype=float)
+                # polytopes_b = np.asarray(polytopes_b, dtype=float)
+                # poly = polytope.Polytope(polytopes_A, polytopes_b)
+                polys.append(polytope.Polytope.from_box([[x1, x2], [y1, y2]]))
+                is_in = False
+                for j, intersection in enumerate(closest_intersections):
+                    if j == i:
+                        continue
+                    if intersection[1] in polys[-1] or (x, y) not in polys[-1] or bottomLeft_ball_boundary not in polys[-1] or topRight_ball_boundary not in polys[-1]:
+                        xi, yi = intersection[1]
+                        if xi == x1 or xi == x2 or yi == y1 or yi == y2:
+                            continue
+                        is_in = True
+                        polys.pop()
+                        break
+                i += 1
+
+        # print(polys)
+        polys.sort(key=lambda poly: poly.volume)
+        return polys[-1]
+
+            # if not is_in:
+            #     return poly
 
 
 
