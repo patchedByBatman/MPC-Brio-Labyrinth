@@ -232,108 +232,126 @@ class ConvexSetConstructor:
     def get_convex_set(self, rays_starting_point, closest_intersections):
         x = rays_starting_point[0]
         y = rays_starting_point[1]
-        bottomLeft_ball_boundary = (x - 0.5, y - 0.5)
-        topRight_ball_boundary = (x + 0.5, y + 0.5)
-        polytopes_A= []
-        polytopes_b= []
-        polys = []
-        i = 0
-        # for p1, p2 in zip(closest_intersections[::2], closest_intersections[1::2]):
-        for p1 in closest_intersections:
-            for p2 in closest_intersections:
 
-                x1 = p1[1][0]
-                y1 = p1[1][1]
-                x2 = p2[1][0]
-                y2 = p2[1][1]
-                # if x1 > x2:
-                #     x1, x2 = x2, x1
-                #     x1 += 0.5
-                #     x2 -= 0.5
+        x_up = x
+        x_low = x
+        y_up = y
+        y_low = y
 
-                # if y1 > y2:
-                #     y1, y2 = y2, y1
-                #     y1 += 0.5
-                #     y2 -= 0.5
+        is_x_low_limit_reached = False
+        is_x_up_limit_reached = False
+        is_y_low_limit_reached = False
+        is_y_up_limit_reached = False
 
-                if x1 > x2:
-                    x1, x2 = x2, x1
+        for dxy in np.linspace(0, 10, 1000):
+            if not is_x_up_limit_reached:
+                x_up += dxy
+            if not is_x_low_limit_reached:
+                x_low -= dxy
+            if not is_y_up_limit_reached:
+                y_up += dxy
+            if not is_y_low_limit_reached:
+                y_low -= dxy
 
-                if y1 > y2:
-                    y1, y2 = y2, y1
-                # print(x1, y1, x2, y2, p1[2], p2[2])
-                # if xc <= x:
-                #     if yc <= y:
-                #         polytopes_A.append([-1, 0])
-                #         polytopes_b.append([-xc-0.01])
+            poly = polytope.Polytope.from_box([[x_low, x_up], [y_low, y_up]])
+            point_in_poly = False
+            for point in closest_intersections:
+                if point[1] in poly:  
+                    x_up -= dxy
+                    x_low += dxy
+                    y_up -= dxy
+                    y_low += dxy
+                    poly = polytope.Polytope.from_box([[x_low, x_up], [y_low, y_up]])
+                    if point[1] not in poly:  
+                        x_up += dxy
 
-                #         polytopes_A.append([0, -1])
-                #         polytopes_b.append([-yc-0.01])
+                    if not is_x_up_limit_reached:
+                        x_up -= dxy
+                        poly = polytope.Polytope.from_box([[x_low, x_up], [y_low, y_up]])
+                        if point[1] in poly:
+                            x_up += dxy
+                        else:
+                            is_x_up_limit_reached = True
 
-                #         polytopes_A.append([1, 0])
-                #         polytopes_b.append([x-0.01])
+                    if not is_x_low_limit_reached:
+                        x_low += dxy
+                        poly = polytope.Polytope.from_box([[x_low, x_up], [y_low, y_up]])
+                        if point[1] in poly:
+                            x_low -= dxy
+                        else:
+                            is_x_low_limit_reached = True
+                    
+                    if not is_y_up_limit_reached:
+                        y_up -= dxy
+                        poly = polytope.Polytope.from_box([[x_low, x_up], [y_low, y_up]])
+                        if point[1] in poly:
+                            y_up += dxy
+                        else:
+                            is_y_up_limit_reached = True
 
-                #         polytopes_A.append([0, 1])
-                #         polytopes_b.append([y-0.01])
-                #     else:
-                #         polytopes_A.append([-1, 0])
-                #         polytopes_b.append([-xc-0.01])
+                    if not is_y_low_limit_reached:
+                        y_low += dxy
+                        poly = polytope.Polytope.from_box([[x_low, x_up], [y_low, y_up]])
+                        if point[1] in poly:
+                            y_low -= dxy
+                        else:
+                            is_y_low_limit_reached = True
+                    
+                    point_in_poly = True
+                    break
 
-                #         polytopes_A.append([0, 1])
-                #         polytopes_b.append([yc-0.01])
+            if point_in_poly:
+                x_up -= dxy
+                x_low += dxy
+                y_up -= dxy
+                y_low += dxy
+                break
 
-                #         polytopes_A.append([1, 0])
-                #         polytopes_b.append([x-0.01])
+        # for dx in np.linspace(0, 10, 1000):
+        #     x_low -= dx
+        #     poly = polytope.Polytope.from_box([[x_low, x_up], [-12, 12]])
+        #     point_in_poly = False
+        #     for point in closest_intersections:
+        #         px, py = point[1]
+        #         if (y-y_lim <= py <= y+y_lim) and point[1] in poly:
+        #             point_in_poly = True
+        #             break
 
-                #         polytopes_A.append([0, -1])
-                #         polytopes_b.append([-y-0.01])
-                # else:
-                #     if yc <= y:
-                #         polytopes_A.append([1, 0])
-                #         polytopes_b.append([xc-0.01])
+        #     if point_in_poly:
+        #         x_low += dx
+        #         break
 
-                #         polytopes_A.append([0, -1])
-                #         polytopes_b.append([-yc-0.01])
+        # for dy in np.linspace(0, 10, 1000):
+        #     y_up += dy
+        #     poly = polytope.Polytope.from_box([[-12, 12], [y_low, y_up]])
+        #     point_in_poly = False
+        #     for point in closest_intersections:
+        #         px, py = point[1]
+        #         if (x-x_lim <= px <= x+x_lim) and point[1] in poly:
+        #             point_in_poly = True
+        #             break
 
-                #         polytopes_A.append([-1, 0])
-                #         polytopes_b.append([-x-0.01])
+        #     if point_in_poly:
+        #         y_up -= dy
+        #         break
 
-                #         polytopes_A.append([0, 1])
-                #         polytopes_b.append([y-0.01])
-                #     else:
-                #         polytopes_A.append([1, 0])
-                #         polytopes_b.append([xc-0.01])
+        # for dy in np.linspace(0, 10, 1000):
+        #     y_low -= dy
+        #     poly = polytope.Polytope.from_box([[-12, 12], [y_low, y_up]])
+        #     point_in_poly = False
+        #     for point in closest_intersections:
+        #         px, py = point[1]
+        #         if (x-x_lim <= px <= x+x_lim) and point[1] in poly:
+        #             point_in_poly = True
+        #             break
 
-                #         polytopes_A.append([0, 1])
-                #         polytopes_b.append([yc-0.01])
-
-                #         polytopes_A.append([-1, 0])
-                #         polytopes_b.append([-x-0.01])
-
-                #         polytopes_A.append([0, -1])
-                #         polytopes_b.append([-y-0.01])
-                        
-                
-                # polytopes_A = np.asarray(polytopes_A, dtype=float)
-                # polytopes_b = np.asarray(polytopes_b, dtype=float)
-                # poly = polytope.Polytope(polytopes_A, polytopes_b)
-                polys.append(polytope.Polytope.from_box([[x1, x2], [y1, y2]]))
-                is_in = False
-                for j, intersection in enumerate(closest_intersections):
-                    if j == i:
-                        continue
-                    if intersection[1] in polys[-1] or (x, y) not in polys[-1] or bottomLeft_ball_boundary not in polys[-1] or topRight_ball_boundary not in polys[-1]:
-                        xi, yi = intersection[1]
-                        if xi == x1 or xi == x2 or yi == y1 or yi == y2:
-                            continue
-                        is_in = True
-                        polys.pop()
-                        break
-                i += 1
-
-        # print(polys)
-        polys.sort(key=lambda poly: poly.volume)
-        return polys[-1]
+        #     if point_in_poly:
+        #         y_low += dy
+        #         break
+        
+        poly1 = polytope.Polytope.from_box([[x_low, x_up], [-12, 12]])
+        poly2 = polytope.Polytope.from_box([[-12, 12], [y_low, y_up]])
+        return poly1.intersect(poly2)
 
             # if not is_in:
             #     return poly
