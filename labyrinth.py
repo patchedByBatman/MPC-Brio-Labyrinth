@@ -78,7 +78,7 @@ class Labyrinth:
         self.add_wall((-11, 11), 22, 1)
         self.add_wall((-11, -11), -1, 22)
         self.add_wall((-11, -11), 22, -1)
-        self.add_wall((11, 11), 22, -1)
+        self.add_wall((11, 11), 1, -22)
         self.add_wall((10, 7.5), 1, 3.5)
         self.add_wall((2, 6.5), 9, 1)
         self.add_wall((2, 6.5), 1, -3)
