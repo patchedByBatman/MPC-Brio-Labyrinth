@@ -165,8 +165,8 @@ class RayTracer:
         return points
 
 class ConvexSetConstructor:
-    def __init__(self):
-        pass
+    def __init__(self, ball_radius=0.5):
+        self.ball_radius= ball_radius
     
     def get_num_path_points_in_poly(self, path, current_idx_on_path, poly):
         count = 0
@@ -249,16 +249,16 @@ class ConvexSetConstructor:
                         polytopes_b= []
                         
                         polytopes_A.append([-1, 0])
-                        polytopes_b.append([-left[1][0]-0.2])
+                        polytopes_b.append([-left[1][0]-self.ball_radius])
 
                         polytopes_A.append([0, -1])
-                        polytopes_b.append([-bottom[1][1]-0.2])
+                        polytopes_b.append([-bottom[1][1]-self.ball_radius])
 
                         polytopes_A.append([1, 0])
-                        polytopes_b.append([right[1][0]-0.2])
+                        polytopes_b.append([right[1][0]-self.ball_radius])
 
                         polytopes_A.append([0, 1])
-                        polytopes_b.append([top[1][1]-0.2])
+                        polytopes_b.append([top[1][1]-self.ball_radius])
 
                         polytopes_A = np.asarray(polytopes_A, dtype=float)
                         polytopes_b = np.asarray(polytopes_b, dtype=float)
