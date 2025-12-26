@@ -21,7 +21,15 @@ This work is done, and a demo script is provided in [_convex_set_demo.py_](conve
 
 In the GIF above, the red circle represents the ball, and the light blue colour polygon represents the computed convex set at each ball position throughout the labyrinth.
 
-More work needs to be done and code needs to be refined. 
+
+## Stage 2: Simulation of the setup.
+## Part A: Simulation using Linear dynamics.
+Usage: Run [_optimiser.py_](optimiser.py) to build the MPC formulation. Then run [_main.py_](main.py) to simulate the setup. There should be an mp4 media file generated under the name _Linear\_dyn\_simulation\_with\_feasible\_convex\_sets.mp4_ with the simulation results. 
+
+In part A of stage 2, only the linearized dynamics of the labyrinth were used to simulate the MCP at work. Below is a GIF showcasing the results of the simulation. The MCP was able to solve the (20m x 20m) labyrinth in 90 seconds of simulation time.
+![Demo of MPC solving the labyrinth in a simulation environment using linearized dynamics](Linear_dyn_simulation_with_feasible_convex_sets.gif)
+
+As it can be seen from the above GIF, the MPC successfully solves the labyrinth. But this simulation is based on the linearized dynamics of the labyrinth setup. The next step is to integrate the position Kalman Filter and then simulate the non-linear dynamics. 
 
 ## References
 [1] J. Gaber, T. Bi and R. D’Andrea, "Adaptive Nonlinear Model Predictive Control for a Real-World Labyrinth Game," 2024 IEEE 63rd Conference on Decision and Control (CDC), Milan, Italy, 2024, pp. 7478-7483, doi: 10.1109/CDC56724.2024.10886880. keywords: {Adaptation models;Computational modeling;Games;Predictive models;Real-time systems;Robustness;Trajectory;Springs;Optimization;Predictive control},
