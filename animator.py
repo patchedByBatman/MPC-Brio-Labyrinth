@@ -8,7 +8,7 @@ class Animator(Labyrinth):
     def __init__(self, animation_name="bRiO Labyrinth"):
         super().__init__()
         self.animation_name = animation_name
-        self.fig = plt.figure(num=animation_name, figsize=(16, 9), layout="constrained")
+        self.fig = plt.figure(num=animation_name, figsize=(8, 6), layout="constrained", dpi=100)
         self.grid = self.fig.add_gridspec(9, 16)
         self.walls = []
         self.holes = []
