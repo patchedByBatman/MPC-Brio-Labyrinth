@@ -12,6 +12,7 @@ class Animator(Labyrinth):
         self.grid = self.fig.add_gridspec(9, 16)
         self.walls = []
         self.holes = []
+        self.pos_ref = Circle((0, 0), 0.1, fc="red")
 
         self.pos_ax = self.fig.add_subplot(self.grid[0:-1, 0:-1])
         self.pos_ax.plot([], [])
@@ -73,8 +74,12 @@ class Animator(Labyrinth):
     def add_hole(self, xy, radius):
         self.walls.append(Circle(xy, radius, fc="black"))
 
+    def update_pos_ref(self, center_xy):
+        self.pos_ref.set_center(center_xy)
+
     def build_labyrinth(self):
         super().build_labyrinth()
+        self.pos_ax.add_patch(self.pos_ref)
         for wall in self.walls:
             self.pos_ax.add_patch(wall)
         for hole in self.holes:
