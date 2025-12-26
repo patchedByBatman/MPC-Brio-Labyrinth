@@ -2,12 +2,12 @@ import numpy as np
 
 class SolutionPath:
     def __init__(self):
-        self.num_samples_per_meter = 1
-        x_start = 10
+        self.num_samples_per_meter = 10
+        x_start = 8
         x_end = (2 - 0.5)/2
         y_start = (7.5 + 11)/2
         y_end = (7.5 + 11)/2
-        dist = x_start - x_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path = [(x, y) for x, y in zip(pathx, pathy)]
@@ -16,6 +16,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (5 + 9)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -24,6 +25,7 @@ class SolutionPath:
         x_end = (-1.5 - 4)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -32,6 +34,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (11 + 4.5)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -40,6 +43,7 @@ class SolutionPath:
         x_end = (-9 - 5)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -48,6 +52,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (6.5 + 5)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -56,6 +61,7 @@ class SolutionPath:
         x_end = (-11 - 8)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -64,6 +70,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (3 + 1)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -72,6 +79,7 @@ class SolutionPath:
         x_end = (-9 - 5)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -80,6 +88,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (0 -2)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -88,6 +97,7 @@ class SolutionPath:
         x_end = (-11 - 8)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -96,6 +106,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (-5.5 - 3)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -104,6 +115,7 @@ class SolutionPath:
         x_end = (-7 -5)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -112,6 +124,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (-11 -8.5)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -120,6 +133,7 @@ class SolutionPath:
         x_end = (2 + 4)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -128,6 +142,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (-1 -5.5)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -136,6 +151,7 @@ class SolutionPath:
         x_end = (-2 +0)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -144,6 +160,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (3 + 1)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -152,6 +169,7 @@ class SolutionPath:
         x_end = (5 + 7.5)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -160,6 +178,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = (-11 -9)/2
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -168,6 +187,7 @@ class SolutionPath:
         x_end = (8.5 + 11)/2
         y_start = y_end
         y_end = y_end
+        dist = np.abs(x_start - x_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
@@ -176,6 +196,7 @@ class SolutionPath:
         x_end = x_end
         y_start = y_end
         y_end = 6
+        dist = np.abs(y_start - y_end)
         pathx = np.linspace(x_start, x_end, int(dist*self.num_samples_per_meter))
         pathy = np.linspace(y_start, y_end, int(dist*self.num_samples_per_meter))
         self.path += [(x, y) for x, y in zip(pathx, pathy)]
