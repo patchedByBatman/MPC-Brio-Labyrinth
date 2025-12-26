@@ -7,10 +7,10 @@ from functools import partial
 # NMPC parameter configuration
 nz = 6  # number of states
 nu = 2  # number of inputs
-N = 50  # prediction horizon
+N = 30  # prediction horizon
 
 # Bicycle model dynamics
-Ts = 0.001  # sampling time
+Ts = 0.1  # sampling time
 dyn = Dynamics(Ts=Ts)
 
 # State and input boundaries
@@ -20,8 +20,8 @@ umin_seq = [-np.pi/24, -np.pi/24] * N
 umax_seq = [np.pi/24, np.pi/24] * N
 
 # NMPC penalty weights
-Q = np.diagflat([1000, 10, 1000, 10, 10, 10])
-R = np.diagflat([600, 600])
+Q = np.diagflat([100, 10, 100, 10, 10, 10])
+R = np.diagflat([10, 10])
 R2 = 100
 
 # NMPC formulation state and input parameter sequences
@@ -50,13 +50,25 @@ position_constraints = []
 for t in range(N):
     u_current = u_seq[t * nu : (t + 1) * nu]  # set current time step input
     total_cost += stage_cost(z_t, u_current)  # add stage cost to total cost for the current time step
-    position_constraints += [
-        z_t[0][0] - position_constraint_params[0],   # x >= xmin
-        position_constraint_params[1] - z_t[0][0],   # x <= xmax
-        z_t[2][0] - position_constraint_params[2],   # y >= ymin
-        position_constraint_params[3] - z_t[2][0]    # y <= ymax
-    ]
+    position_constraints += 1000*cs.fmax(0, position_constraint_params[0] - z_t[0][0] + 0.05)  # x >= xmin
+    position_constraints += 1000*cs.fmax(0, z_t[0][0] - position_constraint_params[1] + 0.05)  # x <= xmax
+    position_constraints += 1000*cs.fmax(0, position_constraint_params[2] - z_t[2][0] + 0.05)  # y >= ymin
+    position_constraints += 1000*cs.fmax(0, z_t[2][0] - position_constraint_params[3] + 0.05)  # y <= ymax
+    # position_constraints += (position_constraint_params[0]) <= z_t[0][0]  # x >= xmin
+    # position_constraints += z_t[0][0] <= (position_constraint_params[1])  # x <= xmax
+    # position_constraints += (position_constraint_params[2]) <= z_t[2][0]  # y >= ymin
+    # position_constraints += z_t[2][0] <= (position_constraint_params[3])  # y <= ymax
+    # position_constraints += (position_constraint_params[0] + 0.5) <= z_t[0][0]  # x >= xmin
+    # position_constraints += z_t[0][0] <= (position_constraint_params[1] - 0.5)  # x <= xmax
+    # position_constraints += (position_constraint_params[2] + 0.5) <= z_t[2][0]  # y >= ymin
+    # position_constraints += z_t[2][0] <= (position_constraint_params[3] - 0.5)  # y <= ymax
 
+    # position_constraints += [
+    #     (z_t[0][0] - position_constraint_params[0])*1000,   # x >= xmin
+    #     (position_constraint_params[1] - z_t[0][0])*1000,   # x <= xmax
+    #     (z_t[2][0] - position_constraint_params[2])*1000,   # y >= ymin
+    #     (position_constraint_params[3] - z_t[2][0])*1000    # y <= ymax
+    # ]
     # position_constraints += cs.fmin(0, position_constraint_params[0] - z_t[0][0])
     # # total_cost += z_t[0][0] <= position_constraint_params[1]
     # # total_cost += position_constraint_params[2] <= z_t[2][0]
@@ -67,11 +79,11 @@ total_cost += terminal_cost(z_t)
 
 # define rectangular constraints for inputs
 U = og.constraints.Rectangle(umin_seq, umax_seq)
-position_constraints = cs.vertcat(*position_constraints)
+# position_constraints = cs.vertcat(*position_constraints)
 # define and build the problem
 problem = og.builder.Problem(u_seq, problem_params, total_cost)
 problem = problem.with_constraints(U)
-problem = problem.with_penalty_constraints(position_constraints)
+problem = problem.with_penalty_constraints(position_constraints*1000)
 
 build_config = og.config.BuildConfiguration() \
     .with_build_directory("optimizer") \
