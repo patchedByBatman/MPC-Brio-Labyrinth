@@ -29,6 +29,8 @@ Usage: Run [_optimiser.py_](optimiser.py) to build the MPC formulation. Then run
 In part A of stage 2, only the linearized dynamics of the labyrinth were used to simulate the MCP at work. Below is a GIF showcasing the results of the simulation. The MCP was able to solve the (20m x 20m) labyrinth in 90 seconds of simulation time.
 ![Demo of MPC solving the labyrinth in a simulation environment using linearized dynamics](Linear_dyn_simulation_with_feasible_convex_sets.gif)
 
+In the above GIF, the larger red circle represents the steel ball, the smaller red circle represents position reference for the MPC, and the collection blue dots represents the solution path of the labyrinth.
+
 As it can be seen from the above GIF, the MPC successfully solves the labyrinth. But this simulation is based on the linearized dynamics of the labyrinth setup. The next step is to integrate the position Kalman Filter and then simulate the non-linear dynamics. 
 
 ## References
