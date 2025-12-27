@@ -2,19 +2,21 @@ from labyrinth import Labyrinth
 
 from matplotlib import pyplot as plt
 from matplotlib.patches import Rectangle, Circle
+import numpy as np
 
 
 class Animator(Labyrinth):
     def __init__(self, animation_name="bRiO Labyrinth"):
         super().__init__()
         self.animation_name = animation_name
-        self.fig = plt.figure(num=animation_name, figsize=(8, 6), layout="constrained", dpi=100)
+        self.fig = plt.figure(num=animation_name, figsize=(16, 9), layout="constrained", dpi=100)
         self.grid = self.fig.add_gridspec(9, 16)
+        self.fig.tight_layout()
         self.walls = []
         self.holes = []
         self.pos_ref = Circle((0, 0), 0.1, fc="red")
 
-        self.pos_ax = self.fig.add_subplot(self.grid[0:-1, 0:-1])
+        self.pos_ax = self.fig.add_subplot(self.grid[0:6, 0:6])
         self.pos_ax.plot([], [])
         self.pos_ax.set_aspect('equal')
         self.pos_ax.grid()
@@ -26,25 +28,66 @@ class Animator(Labyrinth):
         self.pos_ax.set_xlim(min(self.pos_ax_xlims) - 1, max(self.pos_ax_xlims) + 1)
         self.pos_ax.set_ylim(min(self.pos_ax_ylims) - 1, max(self.pos_ax_ylims) + 1)
 
-        # self.vel_ax = self.fig.add_subplot(grid[0:2, 7:16])
-        # self.vel_ax.grid()
-        # self.vel_ax.set_xlim(time[0], time[-1])
-        # self.vel_ax.set_ylim(np.min(state_sequence[:, 3:5]) - 0.2, np.max(state_sequence[:, 3:5]) + 0.2)
+        self.vel_ax = self.fig.add_subplot(self.grid[0:2, 7:16])
+        self.vx_mes_line, = self.vel_ax.plot([], [], color='red')
+        self.vy_mes_line, = self.vel_ax.plot([], [], color='green')
+        self.vx_est_line, = self.vel_ax.plot([], [], color='brown')
+        self.vy_est_line, = self.vel_ax.plot([], [], color='violet')
+        self.vx_line, = self.vel_ax.plot([], [], color='blue')
+        self.vy_line, = self.vel_ax.plot([], [], color='orange')
+        self.vel_ax.grid()
+        self.vel_ax.minorticks_on()
+        self.vel_ax.set_xlabel("time (s)")
+        self.vel_ax.set_ylabel("Velocity (m/s)")
+        self.vel_ax_xlims = [0, 90]
+        self.vel_ax_ylims = [-2.5, 2.5]
+        self.vel_ax.set_xlim(self.vel_ax_xlims[0], self.vel_ax_xlims[1])
+        self.vel_ax.set_ylim(self.vel_ax_ylims[0], self.vel_ax_ylims[1])
+        self.vel_ax.legend(["x-velocity-mes", "y-velocity-mes", "x-velocity-est", "y-velocity-est", "x-velocity", "y-velocity"])
 
-        # self.acc_brk_ax = self.fig.add_subplot(grid[3:6, 7:16])
-        # self.acc_brk_ax.set_xlim(time[0], time[-1])
-        # self.acc_brk_ax.grid()
-        # self.acc_brk_ax.set_ylim(0 - 0.1, 1.1 + 0.1)
+        self.a_b_ax = self.fig.add_subplot(self.grid[3:6, 7:16])
+        self.alpha_mes_line, = self.a_b_ax.plot([], [], color='red')
+        self.beta_mes_line, = self.a_b_ax.plot([], [], color='green')
+        self.alpha_line, = self.a_b_ax.plot([], [], color="blue")
+        self.beta_line, = self.a_b_ax.plot([], [], color='orange')
+        self.a_b_ax.grid()
+        self.a_b_ax.minorticks_on()
+        self.a_b_ax.set_xlabel("time (s)")
+        self.a_b_ax.set_ylabel("Tilt angles (deg)")
+        self.a_b_ax_xlims = [0, 90]
+        self.a_b_ax_ylims = [-np.pi/12, np.pi/12]
+        self.a_b_ax.set_xlim(self.a_b_ax_xlims[0], self.a_b_ax_xlims[1])
+        self.a_b_ax.set_ylim(self.a_b_ax_ylims[0], self.a_b_ax_ylims[1])
+        self.a_b_ax.legend(["alpha-mes", "beta-mes", "alpha", "beta"])
 
-        # self.omega_ax = self.fig.add_subplot(grid[7:9, 0:7])
-        # self.omega_ax.grid()
-        # self.omega_ax.set_xlim(time[0], time[-1])
-        # self.omega_ax.set_ylim(np.min(state_sequence[:, 5]) - 0.2, np.max(state_sequence[:, 5]) + 0.2)
+        self.x_y_ax = self.fig.add_subplot(self.grid[7:9, 0:7])
+        self.x_mes_line, = self.x_y_ax.plot([], [], color='red')
+        self.y_mes_line, = self.x_y_ax.plot([], [], color="green")
+        self.x_est_line, = self.x_y_ax.plot([], [], color="brown")
+        self.y_est_line, = self.x_y_ax.plot([], [], color="violet")
+        self.x_line, = self.x_y_ax.plot([], [], color='blue')
+        self.y_line, = self.x_y_ax.plot([], [], color='orange')
+        self.x_y_ax.grid()
+        self.x_y_ax.minorticks_on()
+        self.x_y_ax.set_xlabel("time (s)")
+        self.x_y_ax.set_ylabel("Position (m)")
+        self.x_y_ax_xlims = [0, 90]
+        self.x_y_ax_ylims = [-12, 12]
+        self.x_y_ax.set_xlim(self.x_y_ax_xlims[0], self.x_y_ax_xlims[1])
+        self.x_y_ax.set_ylim(self.x_y_ax_ylims[0], self.x_y_ax_ylims[1])
+        self.x_y_ax.legend(["x-position-mes", "y-position-mes", "x-position-est", "y-position-est", "x-position", "y-position"])
 
-        # self.delta_ax = self.fig.add_subplot(grid[7:9, 8:16])
-        # self.delta_ax.grid()
-        # self.delta_ax.set_xlim(time[0], time[-1])
-        # self.delta_ax.set_ylim(np.min(input_sequence[:, 1]) - 0.2, np.max(input_sequence[:, 1]) + 0.2)
+        self.g_ax = self.fig.add_subplot(self.grid[7:9, 8:16])
+        self.g_line, = self.g_ax.plot([], [])
+        self.g_ax.grid()
+        self.g_ax.minorticks_on()
+        self.g_ax.set_xlabel("time (s)")
+        self.g_ax.set_ylabel("g estimate (m/s^2)")
+        self.g_ax_xlims = [0, 90]
+        self.g_ax_ylims = [-10, 2]
+        self.g_ax.set_xlim(self.g_ax_xlims[0], self.g_ax_xlims[1])
+        self.g_ax.set_ylim(self.g_ax_ylims[0], self.g_ax_ylims[1])
+        self.g_ax.legend(["g estimate"])
 
 
         
@@ -88,6 +131,6 @@ class Animator(Labyrinth):
     def show_animation(self):
         plt.show()
 
-
-an = Animator()
-an.build_labyrinth()
+if __name__ == "__main__":
+    an = Animator()
+    an.build_labyrinth()
