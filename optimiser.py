@@ -20,7 +20,7 @@ umin_seq = [-np.pi/24, -np.pi/24] * N
 umax_seq = [np.pi/24, np.pi/24] * N
 
 # NMPC penalty weights
-Q = np.diagflat([100, 10, 100, 10, 10, 10])
+Q = np.diagflat([50, 10, 50, 10, 10, 10])
 R = np.diagflat([10, 10])
 R2 = 100
 
@@ -50,10 +50,10 @@ position_constraints = []
 for t in range(N):
     u_current = u_seq[t * nu : (t + 1) * nu]  # set current time step input
     total_cost += stage_cost(z_t, u_current)  # add stage cost to total cost for the current time step
-    position_constraints += 1000*cs.fmax(0, position_constraint_params[0] - z_t[0][0] + 0.05)  # x >= xmin
-    position_constraints += 1000*cs.fmax(0, z_t[0][0] - position_constraint_params[1] + 0.05)  # x <= xmax
-    position_constraints += 1000*cs.fmax(0, position_constraint_params[2] - z_t[2][0] + 0.05)  # y >= ymin
-    position_constraints += 1000*cs.fmax(0, z_t[2][0] - position_constraint_params[3] + 0.05)  # y <= ymax
+    position_constraints += 1000*cs.fmax(0, position_constraint_params[0] - z_t[0][0] + 0.08)  # x >= xmin
+    position_constraints += 1000*cs.fmax(0, z_t[0][0] - position_constraint_params[1] + 0.08)  # x <= xmax
+    position_constraints += 1000*cs.fmax(0, position_constraint_params[2] - z_t[2][0] + 0.08)  # y >= ymin
+    position_constraints += 1000*cs.fmax(0, z_t[2][0] - position_constraint_params[3] + 0.08)  # y <= ymax
     # position_constraints += (position_constraint_params[0]) <= z_t[0][0]  # x >= xmin
     # position_constraints += z_t[0][0] <= (position_constraint_params[1])  # x <= xmax
     # position_constraints += (position_constraint_params[2]) <= z_t[2][0]  # y >= ymin
