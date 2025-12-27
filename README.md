@@ -56,7 +56,7 @@ Below is a GIF showcasing the corresponding simulation results.
 
 Note: There are no wall dynamics in the simulation environment.
 
-As it can be seen from the above GIF, the MPC successfully solves the labyrinth. A complete and proper explanation of the approach will be soon published on [my website](https://patchedbybatman.github.io).
+As it can be seen from the above GIF, despite noisy measurements, the MPC successfully solves the labyrinth. IT can also be obeserved that the estimates of g converge to a value around $-9.81 \frac{\text{m}}{\text{s}^2}$. A complete and proper explanation of the approach will be soon published on [my website](https://patchedbybatman.github.io).
 
 
 ## References
